@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-database
+  labels:
+    app: registry-test
+data:
+  POSTGRESQL_DATABASE: registry-database
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registry-database
+  labels:
+    app: registry-test
+stringData:
+  POSTGRESQL_PASSWORD: VBzemgV07Zb77iRdvkrotg==
+  POSTGRESQL_USER: registry-user
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry-database
+  labels:
+    app: registry-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registry-test
+      component: database
+  template:
+    metadata:
+      labels:
+        app: registry-test
+        component: database
+    spec:
+      containers:
+        - name: postgres
+          image: centos/postgresql-10-centos7
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: registry-database
+            - configMapRef:
+                name: registry-database
+          volumeMounts:
+            - mountPath: /var/lib/pgsql/data
+              name: registry-database-data
+          resources: {}
+      volumes:
+        - name: registry-database-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry-database
+spec:
+  selector:
+    app: registry-test
+    component: database
+  ports:
+    - protocol: TCP
+      port: 5432
