@@ -65,7 +65,6 @@ metadata:
 spec:
   rules:
     - host: "registry-test.127.0.0.1.nip.io"
-    - host: "*.ngrok.io"
       http:
         paths:
           - pathType: Prefix
@@ -75,7 +74,6 @@ spec:
                 name: envoy
                 port:
                   number: 8000
-
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -102,29 +100,10 @@ data:
                 virtual_hosts:
                 - name: local_service
                   domains: ['*']
-                  typed_per_filter_config:
-                    envoy.filters.http.ext_authz:
-                      "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthzPerRoute
-                      check_settings:
-                        context_extensions:
-                          virtual_host: local_service
                   routes:
-                  - match:
-                      prefix: "/direct"
-                    direct_response:
-                      status: 200
-                      body:
-                        inline_string: 'direct'
                   - match: { prefix: / }
                     route:
                       cluster: registry-test
-                  cors:
-                    allow_origin_string_match:
-                    - prefix: "*"
-                    allow_methods: GET, PUT, DELETE, POST, OPTIONS
-                    allow_headers: keep-alive,user-agent,cache-control,content-type,content-transfer-encoding,x-api-key,x-accept-content-transfer-encoding,x-accept-response-streaming,x-user-agent,x-grpc-web,grpc-timeout
-                    max_age: "1728000"
-                    expose_headers: x-api-key,grpc-status,grpc-message
               http_filters:
               - name: envoy.filters.http.cors
               - name: envoy.filters.http.router
@@ -142,7 +121,7 @@ data:
             - endpoint:
                 address:
                   socket_address:
-                    address: registry-test
+                    address: registry
                     port_value: 8080
     admin:
       access_log_path: "/tmp/admin_access.log"
