@@ -5,7 +5,7 @@ metadata:
   labels:
     app: registry-test
 data:
-  POSTGRESQL_DATABASE: registry-database
+  POSTGRESQL_DATABASE: registry-test
 ---
 apiVersion: v1
 kind: Secret

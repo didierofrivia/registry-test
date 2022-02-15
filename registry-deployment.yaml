@@ -20,7 +20,7 @@ spec:
             - containerPort: 8080
           env:
             - name: REGISTRY_DATASOURCE_URL
-              value: jdbc:postgresql://apicurio-registry-database/apicurio-registry
+              value: jdbc:postgresql://registry-database/registry-test
             - name: REGISTRY_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
