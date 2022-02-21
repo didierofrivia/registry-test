@@ -2,14 +2,16 @@
   "name": "dev-test",
   "version": "1.0.0",
   "description": "Testing Apicurio Registry federated modules",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "author": "@didierofrivia",
   "license": "ISC",
   "devDependencies": {
     "webpack": "^5.69.0",
-    "webpack-cli": "^4.9.2"
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4"
   }
 }
