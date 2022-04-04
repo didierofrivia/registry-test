@@ -1,6 +1,6 @@
 SHELL = /usr/bin/env bash -o pipefail
 KIND_CLUSTER_NAME ?= registry-test-cluster
-KIND_IMAGE ?= kindest/node:v1.19.1
+KIND_IMAGE ?= kindest/node:v1.23.1
 CLUSTER_NAMESPACE ?= registry-test
 
 KIND = $(shell pwd)/bin/kind
