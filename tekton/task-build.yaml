@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: kamrad-build
+spec:
+  workspaces:
+    - name: repo
+  steps:
+    - name: build
+      image: klakegg/hugo:latest-ext
+      workingDir: /workspace/repo/
+      script: |
+        echo "Installing Node dependencies"
+        node -v
+        npm ci
+        
+        echo "Building..."
+        hugo version
+        hugo --minify
