@@ -1,0 +1,31 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: kamrad-get-api-specs
+spec:
+  workspaces:
+    - name: repo
+  steps:
+    - name: get-index
+      image: quay.io/didierofrivia/spec-builder:latest
+      imagePullPolicy: IfNotPresent
+      workingDir: /workspace/repo/
+      script: |
+        echo "Installing dependencies..."
+        curl --version
+        mkdir -p data
+        curl http://registry.registry-test.svc.cluster.local:8080/apis/registry/v2/groups/production/artifacts \
+        | jq ' .artifacts | map( { (.id): . } ) | add' \
+        >> data/index.json
+    - name: get-specs
+      image: quay.io/didierofrivia/spec-builder:latest
+      imagePullPolicy: IfNotPresent
+      workingDir: /workspace/repo/
+      script: |
+        jq 'keys | .[]' data/index.json | while read -r id
+        do
+          eval id=$id
+          curl http://registry.registry-test.svc.cluster.local:8080/apis/registry/v2/groups/production/artifacts/$id \
+          >> data/$id.json
+        done
+        ls -lah data/
