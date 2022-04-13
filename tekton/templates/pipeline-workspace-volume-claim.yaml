@@ -1,5 +1,5 @@
 metadata:
-  name: kamrad-volume
+  name: kamrad-code-wp
 spec:
   accessModes:
     - ReadWriteOnce
