@@ -23,8 +23,10 @@ local-cluster-up: kind local-cleanup ## Start a local Kubernetes cluster using K
 local-cleanup: kind ## Deletes the local Kubernetes cluster started using Kind
 	$(KIND) delete cluster --name $(KIND_CLUSTER_NAME)
 
-local-setup: local-cluster-up namespace install-registry install-api install-envoy ## Set up a test/dev local Kubernetes server
+local-setup: local-cluster-up namespace install-registry install-api install-envoy install-devportal-volume install-tekton ## Set up a test/dev local Kubernetes server
 	kubectl -n $(CLUSTER_NAMESPACE) wait --timeout=500s --for=condition=Available deployments --all
+	kubectl -n tekton-pipelines wait --timeout=500s --for=condition=Available deployments --all
+	$(MAKE) install-pipelines
 	kubectl port-forward --namespace $(CLUSTER_NAMESPACE) deployment/envoy 8000:8000 &
 	@{ \
 	echo ;\
@@ -40,8 +42,11 @@ namespace: ## Create namespace for registry test.
 
 install-registry: ## Installs registry and its ddbb
 	kubectl -n $(CLUSTER_NAMESPACE) apply -f registry-ddbb-deployment.yaml
-	kubectl -n $(CLUSTER_NAMESPACE) wait --timeout=100s --for=condition=Available deployments registry-database
+	kubectl -n $(CLUSTER_NAMESPACE) wait --timeout=500s --for=condition=Available deployments registry-database
 	kubectl -n $(CLUSTER_NAMESPACE) apply -f registry-deployment.yaml
+
+install-devportal-volume:
+	kubectl -n $(CLUSTER_NAMESPACE) apply -f devportal-pv.yaml
 
 install-api: ## Installs the product api
 	kubectl -n $(CLUSTER_NAMESPACE) apply -f httpbin-deployment.yaml
@@ -53,8 +58,20 @@ install-envoy: ## Installs envoy proxy
 ##@ Tekton Pipelines
 
 install-tekton:
-	kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
-	kubectl apply -f https://raw.githubusercontent.com/tektoncd/catalog/master/task/git-clone/0.5/git-clone.yaml
+	kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/latest/release.notags.yaml
+	kubectl apply -n tekton-pipelines -f https://raw.githubusercontent.com/tektoncd/catalog/master/task/git-clone/0.5/git-clone.yaml
+
+install-pipelines:
+	kubectl -n tekton-pipelines apply -f tekton
+
+run-pipeline:
+	$(TKN) -n tekton-pipelines pipeline start kamrad-build-deploy \
+		--workspace name=kamrad-code-wp,volumeClaimTemplateFile=./tekton/templates/pipeline-workspace-volume-claim.yaml \
+		--workspace name=devportal-wp,claimName=devportal-pvc \
+		--param repo-url=https://github.com/3scale-labs/kamrad \
+		--param revision=main \
+		--showlog
+
 
 # go-get-tool will 'go get' any package $2 and install it to $1.
 PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
