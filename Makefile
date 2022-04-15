@@ -23,7 +23,7 @@ local-cluster-up: kind local-cleanup ## Start a local Kubernetes cluster using K
 local-cleanup: kind ## Deletes the local Kubernetes cluster started using Kind
 	$(KIND) delete cluster --name $(KIND_CLUSTER_NAME)
 
-local-setup: local-cluster-up namespace install-registry install-api install-envoy install-devportal-volume install-tekton ## Set up a test/dev local Kubernetes server
+local-setup: local-cluster-up namespace install-registry install-api install-envoy install-devportal install-tekton ## Set up a test/dev local Kubernetes server
 	kubectl -n $(CLUSTER_NAMESPACE) wait --timeout=500s --for=condition=Available deployments --all
 	kubectl -n tekton-pipelines wait --timeout=500s --for=condition=Available deployments --all
 	$(MAKE) install-pipelines
@@ -45,8 +45,10 @@ install-registry: ## Installs registry and its ddbb
 	kubectl -n $(CLUSTER_NAMESPACE) wait --timeout=500s --for=condition=Available deployments registry-database
 	kubectl -n $(CLUSTER_NAMESPACE) apply -f registry-deployment.yaml
 
-install-devportal-volume:
+install-devportal:
 	kubectl -n $(CLUSTER_NAMESPACE) apply -f devportal-pv.yaml
+	kubectl -n $(CLUSTER_NAMESPACE) apply -f devportal-pvc.yaml
+	kubectl -n $(CLUSTER_NAMESPACE) apply -f devportal-deployment.yaml
 
 install-api: ## Installs the product api
 	kubectl -n $(CLUSTER_NAMESPACE) apply -f httpbin-deployment.yaml
