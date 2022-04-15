@@ -12,7 +12,6 @@ spec:
     description: The git branch to clone.
   workspaces:
   - name: kamrad-code-wp
-  - name: devportal-wp
   tasks:
     - name: fetch-repo
       taskRef:
@@ -44,7 +43,5 @@ spec:
       workspaces:
         - name: code
           workspace: kamrad-code-wp
-        - name: devportal
-          workspace: devportal-wp
       taskRef:
         name: kamrad-deploy

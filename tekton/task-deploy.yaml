@@ -7,14 +7,10 @@ spec:
     - name: code
       description: The workspace where the dev portal source code resides
       mountPath: /workspace/code
-    - name: devportal
-      description: The workspace where the dev portal final html code resides
-      mountPath: /workspace/devportal
   steps:
     - name: deploy
-      image: quay.io/didierofrivia/spec-builder:latest
-      workingDir: /workspace/
+      image: quay.io/didierofrivia/devportal-builder:latest
+      workingDir: /workspace/code
       script: |
         echo "Deploy..."
-        echo "cp -vR /workspace/code/public/* /workspace/devportal/"
-        cp -vR /workspace/code/public/* /workspace/devportal/
+        kubectl cp  /workspace/code/public/* registry-test/$(kubectl get pods --namespace=registry-test | grep 'devportal' | cut -d " " -f1):/mnt/data/

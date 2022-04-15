@@ -72,6 +72,7 @@ run-pipeline:
 		--workspace name=devportal-wp,claimName=devportal-pvc \
 		--param repo-url=https://github.com/3scale-labs/kamrad \
 		--param revision=main \
+		-s deployer-sa \
 		--showlog
 
 
