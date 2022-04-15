@@ -6,3 +6,6 @@ out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
+
+# binaries
+bin/
