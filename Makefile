@@ -18,7 +18,7 @@ bin:
 	mkdir -p bin/
 
 local-cluster-up: kind local-cleanup ## Start a local Kubernetes cluster using Kind
-	$(KIND) create cluster --name $(KIND_CLUSTER_NAME) --image $(KIND_IMAGE) --config kind-cluster.yaml
+	$(KIND) create cluster --name $(KIND_CLUSTER_NAME) --image $(KIND_IMAGE)
 
 local-cleanup: kind ## Deletes the local Kubernetes cluster started using Kind
 	$(KIND) delete cluster --name $(KIND_CLUSTER_NAME)
