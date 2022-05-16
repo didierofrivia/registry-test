@@ -13,5 +13,5 @@ spec:
       workingDir: /workspace/code
       script: |
         echo "Deploy..."
-        kubectl cp /workspace/code/public registry-test/$(kubectl get pods --namespace=registry-test | grep 'devportal' | cut -d " " -f1):/mnt/data/
+        kubectl cp /workspace/code/public/. registry-test/$(kubectl get pods --namespace=registry-test | grep 'devportal' | cut -d " " -f1):/usr/share/caddy
         echo "Done :)"
