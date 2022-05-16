@@ -2,6 +2,8 @@ SHELL = /usr/bin/env bash -o pipefail
 KIND_CLUSTER_NAME ?= registry-test-cluster
 KIND_IMAGE ?= kindest/node:v1.23.1
 CLUSTER_NAMESPACE ?= registry-test
+KAMRAD_REPO_URL ?= https://github.com/3scale-labs/kamrad
+KAMRAD_REPO_BRANCH ?= tekton-testing
 
 KIND = $(shell pwd)/bin/kind
 TKN = $(shell pwd)/bin/tkn
@@ -71,8 +73,8 @@ run-pipeline:
 	$(TKN) -n tekton-pipelines pipeline start kamrad-build-deploy \
 		--workspace name=kamrad-code-wp,volumeClaimTemplateFile=./tekton/templates/pipeline-workspace-volume-claim.yaml \
 		--workspace name=devportal-wp,claimName=devportal-pvc \
-		--param repo-url=https://github.com/3scale-labs/kamrad \
-		--param revision=main \
+		--param repo-url=$(KAMRAD_REPO_URL) \
+		--param revision=$(KAMRAD_REPO_BRANCH) \
 		-s deployer-sa \
 		--showlog
 
