@@ -23,7 +23,7 @@ spec:
           ports:
             - containerPort: 80
           volumeMounts:
-            - mountPath: "/data"
+            - mountPath: "/usr/share/caddy"
               name: devportal-pv
   replicas: 1
 ---
@@ -32,8 +32,10 @@ kind: Service
 metadata:
   name: devportal
 spec:
+  type: LoadBalancer
   selector:
     app: registry-test-devportal
   ports:
     - port: 8888
       protocol: TCP
+      targetPort: 80
