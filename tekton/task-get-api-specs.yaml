@@ -28,4 +28,23 @@ spec:
           curl http://registry.registry-test.svc.cluster.local:9090/apis/registry/v2/groups/production/artifacts/$id \
           >> data/specs/$id.json
         done
-        ls -lah data/
+        ls -lah data/specs
+    - name: create-meta-file
+      image: quay.io/didierofrivia/spec-builder:latest
+      imagePullPolicy: IfNotPresent
+      workingDir: /workspace/repo/
+      script: |
+        touch content/specs.md
+        cat <<EOT >> content/specs.md
+        ---
+        title: Specs
+        layout: specs
+        specs_refs:
+        EOT
+        jq 'keys | .[]' data/specs/index.json | while read -r id
+        do
+          eval id=$id
+          echo "- "$id >> content/specs.md
+        done
+        echo "---" >> content/specs.md
+        cat content/specs.md
