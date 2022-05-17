@@ -138,7 +138,7 @@ data:
                 address:
                   socket_address:
                     address: registry
-                    port_value: 8080
+                    port_value: 9090
       - name: httpbin-cluster
         connect_timeout: 0.25s
         type: strict_dns

@@ -13,19 +13,19 @@ spec:
       script: |
         echo "Installing dependencies..."
         curl --version
-        mkdir -p data
-        curl http://registry.registry-test.svc.cluster.local:8080/apis/registry/v2/groups/production/artifacts \
+        mkdir -p data/specs
+        curl http://registry.registry-test.svc.cluster.local:9090/apis/registry/v2/groups/production/artifacts \
         | jq ' .artifacts | map( { (.id): . } ) | add' \
-        >> data/index.json
+        >> data/specs/index.json
     - name: get-specs
       image: quay.io/didierofrivia/spec-builder:latest
       imagePullPolicy: IfNotPresent
       workingDir: /workspace/repo/
       script: |
-        jq 'keys | .[]' data/index.json | while read -r id
+        jq 'keys | .[]' data/specs/index.json | while read -r id
         do
           eval id=$id
-          curl http://registry.registry-test.svc.cluster.local:8080/apis/registry/v2/groups/production/artifacts/$id \
-          >> data/$id.json
+          curl http://registry.registry-test.svc.cluster.local:9090/apis/registry/v2/groups/production/artifacts/$id \
+          >> data/specs/$id.json
         done
         ls -lah data/

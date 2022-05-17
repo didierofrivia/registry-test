@@ -30,7 +30,7 @@ local-setup: local-cluster-up namespace install-registry install-api install-env
 	kubectl -n tekton-pipelines wait --timeout=500s --for=condition=Available deployments --all
 	$(MAKE) install-pipelines
 	kubectl port-forward --namespace $(CLUSTER_NAMESPACE) deployment/envoy 8000:8000 &
-	kubectl port-forward  --namespace $(CLUSTER_NAMESPACE) service/devportal 8888:8888 &
+	kubectl port-forward  --namespace $(CLUSTER_NAMESPACE) service/devportal 8080:8080 &
 	@{ \
 	echo ;\
 	echo "***************************************************************************"; \

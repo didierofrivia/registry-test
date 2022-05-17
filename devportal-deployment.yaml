@@ -36,6 +36,6 @@ spec:
   selector:
     app: registry-test-devportal
   ports:
-    - port: 8888
+    - port: 8080
       protocol: TCP
       targetPort: 80
