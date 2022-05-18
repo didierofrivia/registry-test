@@ -1,0 +1,47 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: kamrad-build-deploy
+spec:
+  params:
+  - name: repo-url
+    type: string
+    description: The git repository URL to clone from.
+  - name: revision
+    type: string
+    description: The git branch to clone.
+  workspaces:
+  - name: kamrad-code-wp
+  tasks:
+    - name: fetch-repo
+      taskRef:
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: kamrad-code-wp
+      params:
+        - name: url
+          value: $(params.repo-url)
+        - name: revision
+          value: $(params.revision)
+    - name: get-specs
+      runAfter: [fetch-repo]
+      workspaces:
+        - name: repo
+          workspace: kamrad-code-wp
+      taskRef:
+        name: kamrad-get-api-specs
+    - name: build
+      runAfter: [ get-specs ]
+      workspaces:
+        - name: repo
+          workspace: kamrad-code-wp
+      taskRef:
+        name: kamrad-build
+    - name: deploy
+      runAfter: [ build ]
+      workspaces:
+        - name: code
+          workspace: kamrad-code-wp
+      taskRef:
+        name: kamrad-deploy

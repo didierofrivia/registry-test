@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: deployer-r
+rules:
+  - apiGroups: [""]
+    resources:
+      - persistentvolumes
+      - pods
+      - pods/exec
+    verbs:
+      - get
+      - create
+      - list
+      - delete
+      - write

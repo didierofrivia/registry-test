@@ -8,12 +8,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: registry-test
+      app: registry-test-envoy
       svc: envoy
   template:
     metadata:
       labels:
-        app: registry-test
+        app: registry-test-envoy
         svc: envoy
     spec:
       containers:
@@ -51,7 +51,7 @@ metadata:
     app: registry-test
 spec:
   selector:
-    app: registry-test
+    app: registry-test-envoy
     svc: envoy
   ports:
     - name: web
@@ -138,7 +138,7 @@ data:
                 address:
                   socket_address:
                     address: registry
-                    port_value: 8080
+                    port_value: 9090
       - name: httpbin-cluster
         connect_timeout: 0.25s
         type: strict_dns

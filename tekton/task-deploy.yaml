@@ -1,0 +1,17 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: kamrad-deploy
+spec:
+  workspaces:
+    - name: code
+      description: The workspace where the dev portal source code resides
+      mountPath: /workspace/code
+  steps:
+    - name: deploy
+      image: quay.io/didierofrivia/devportal-builder:latest
+      workingDir: /workspace/code
+      script: |
+        echo "Deploy..."
+        kubectl cp /workspace/code/public/. registry-test/$(kubectl get pods --namespace=registry-test | grep 'devportal' | cut -d " " -f1):/usr/share/caddy
+        echo "Done :)"

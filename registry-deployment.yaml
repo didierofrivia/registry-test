@@ -7,11 +7,11 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: registry-test
+      app: registry-test-registry
   template:
     metadata:
       labels:
-        app: registry-test
+        app: registry-test-registry
     spec:
       containers:
         - name: registry
@@ -19,6 +19,8 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: LOG_LEVEL
+              value: FINEST
             - name: REGISTRY_DATASOURCE_URL
               value: jdbc:postgresql://registry-database/registry-test
             - name: REGISTRY_DATASOURCE_USERNAME
@@ -40,7 +42,8 @@ metadata:
   name: registry
 spec:
   selector:
-    app: registry-test
+    app: registry-test-registry
   ports:
-    - port: 8080
+    - port: 9090
+      targetPort: 8080
       protocol: TCP

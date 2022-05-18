@@ -7,11 +7,11 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: registry-test
+      app: registry-test-httpbin
   template:
     metadata:
       labels:
-        app: registry-test
+        app: registry-test-httpbin
     spec:
       containers:
         - name: httpbin
@@ -26,7 +26,7 @@ metadata:
   name: httpbin
 spec:
   selector:
-    app: registry-test
+    app: registry-test-httpbin
   ports:
     - port: 80
       protocol: TCP
