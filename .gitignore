@@ -6,3 +6,10 @@ out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
+
+# Go bin directory
+bin/
+
+# Node
+node_modules/
+*/node_modules/

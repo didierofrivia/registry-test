@@ -1,0 +1,34 @@
+{
+  "name": "dev-test",
+  "version": "1.0.0",
+  "description": "Testing Apicurio Registry federated modules",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "author": "@didierofrivia",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/preset-react": "^7.16.7",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-router": "^5.1.18",
+    "@types/react-router-dom": "^5.3.3",
+    "babel-loader": "^8.2.3",
+    "html-webpack-plugin": "^5.5.0",
+    "ts-loader": "^9.2.6",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "typescript": "^4.5.5",
+    "webpack": "^5.69.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4"
+  },
+  "dependencies": {
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.1"
+  }
+}
